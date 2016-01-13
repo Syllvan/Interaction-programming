@@ -20,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         psm = new PasswordStrengthMeter(this);
+        // alternatively create a PasswordStrengthMeter with
+        // custom PasswordRequirements or StrengthVisualization.
+        // See those constructors in PasswordStrengthMeter.java
+
         t = new Toast(this);
         l = new LinearLayout(this);
         l.setOrientation(LinearLayout.VERTICAL);

@@ -18,11 +18,26 @@ public class InplaceEditor extends LinearLayout {
     private Button cancel;
     private String editableText="";
     private TextUpdateListener textListener;
+    private Visualization vis;
 
     //constructor
     public InplaceEditor(Context c){
         super(c);
-        context=c;
+        context = c;
+        vis = new Visualization();
+
+        setup();
+    }
+
+    public InplaceEditor(Context c, Visualization visualization) {
+        super(c);
+        context = c;
+        vis = visualization;
+
+        setup();
+    }
+
+    private void setup() {
         this.setOrientation(VERTICAL);
 
         //Editable text
@@ -33,7 +48,7 @@ public class InplaceEditor extends LinearLayout {
         input.setBackgroundColor(Color.TRANSPARENT);
         input.setOnClickListener(textClick);
         input.setOnFocusChangeListener(focusChangeListener);
-        
+
         //Buttons which are available when editing
         save = new Button(context);
         save.setText("Save");
@@ -72,13 +87,17 @@ public class InplaceEditor extends LinearLayout {
         public void onFocusChange(View v, boolean hasFocus) {
             if(hasFocus){
                 input.setBackgroundColor(Color.parseColor("#FAEBD7"));
-                InplaceEditor.this.addView(buttonLine);
+                if(vis.hasButtons()) {
+                    InplaceEditor.this.addView(buttonLine);
+                }
             }
             else{
                 input.setBackgroundColor(Color.TRANSPARENT);
                 input.setText(editableText);
                 input.setFocusable(false);
-                InplaceEditor.this.removeView(buttonLine);
+                if(vis.hasButtons()) {
+                    InplaceEditor.this.removeView(buttonLine);
+                }
             }
         }
     };

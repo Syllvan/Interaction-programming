@@ -23,11 +23,46 @@ public class PasswordStrengthMeter extends LinearLayout{
     private TextView strengthText;
     private ProgressBar progress;
     private PasswordRequirements pr;
+    private StrengthVisualization sv;
 
     public PasswordStrengthMeter(Context c){
         super(c);
         context = c;
         pr = new PasswordRequirements();
+        sv = new StrengthVisualization();
+
+        setup();
+    }
+
+    public PasswordStrengthMeter(Context c, PasswordRequirements inputPR){
+        super(c);
+        context = c;
+        pr = inputPR;
+        sv = new StrengthVisualization();
+
+        setup();
+    }
+
+    public PasswordStrengthMeter(Context c, StrengthVisualization inputSV){
+        super(c);
+        context = c;
+        pr = new PasswordRequirements();
+        sv = inputSV;
+
+        setup();
+    }
+
+    public PasswordStrengthMeter(Context c, PasswordRequirements inputPR, StrengthVisualization inputSV){
+        super(c);
+        context = c;
+        pr = inputPR;
+        sv = inputSV;
+
+        setup();
+    }
+
+    //Seperate all common setup for the constructors.
+    private void setup() {
         this.setOrientation(LinearLayout.VERTICAL);
 
         userInput = new EditText(context);
@@ -52,8 +87,12 @@ public class PasswordStrengthMeter extends LinearLayout{
         progress.getProgressDrawable().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
 
         this.addView(userInput);
-        this.addView(textLine);
-        this.addView(progress);
+        if(sv.hasStrengthText()) {
+            this.addView(textLine);
+        }
+        if(sv.hasStrengthBar()) {
+            this.addView(progress);
+        }
 
         userInput.addTextChangedListener(watcher);
     }
@@ -118,8 +157,12 @@ public class PasswordStrengthMeter extends LinearLayout{
             int level = 0;
             if (!password.equals("")){
                 level=pr.passwordStrengthLevel(password);
-                setStrengthText(level);
-                updateProgressBar(level);
+                if(sv.hasStrengthText()) {
+                    setStrengthText(level);
+                }
+                if(sv.hasStrengthBar()) {
+                    updateProgressBar(level);
+                }
             }
             else{
                 strengthText.setText(" Too short");
